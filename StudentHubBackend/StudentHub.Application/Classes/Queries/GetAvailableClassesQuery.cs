@@ -7,5 +7,6 @@ namespace StudentHub.Application.Classes.Queries
 {
     public class GetAvailableClassesQuery: IRequest<List<ClassDto>>
     {
+        public int StudentId { get; set; }
     }
 }
