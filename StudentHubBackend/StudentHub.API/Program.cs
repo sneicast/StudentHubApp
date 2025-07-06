@@ -7,6 +7,7 @@ using StudentHub.Infrastructure.Repositories;
 using StudentHub.Infrastructure.Services;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using StudentHub.Application.CreditPrograms.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,9 +25,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
+//Inyección de Interfaces y Repositorios
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-// Inyección de IJwtTokenService
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<ICreditProgramRepository, CreditProgramRepository>();
 
 
 // JWT Config
@@ -47,9 +49,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+
 // MediatR v13:
-
-
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(AssemblyReference).Assembly);
