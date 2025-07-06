@@ -6,6 +6,7 @@ namespace StudentHub.Application.Students.Interfaces
     {
         Task<int> AddStudentAsync(Student student, CancellationToken cancellationToken);
         Task<List<Student>> GetAllStudentsAsync(CancellationToken cancellationToken);
+        Task<Student?> GetStudentByEmailAsync(string email, CancellationToken cancellationToken);
 
     }
 }

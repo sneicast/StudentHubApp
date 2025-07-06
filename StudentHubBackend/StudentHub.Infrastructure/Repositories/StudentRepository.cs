@@ -25,5 +25,12 @@ namespace StudentHub.Infrastructure.Repositories
         {
             return await _context.Students.AsNoTracking().ToListAsync(cancellationToken);
         }
+
+        public async Task<Student?> GetStudentByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            return await _context.Students
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Email == email, cancellationToken);
+        }
     }
 }

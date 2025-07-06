@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using StudentHub.Application;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using StudentHub.Application.Students.Interfaces;
 using StudentHub.Infrastructure.Persistence;
 using StudentHub.Infrastructure.Repositories;
-using StudentHub.Application;
+using StudentHub.Infrastructure.Services;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +25,27 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     ));
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+// Inyección de IJwtTokenService
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
+
+// JWT Config
+var key = builder.Configuration["Jwt:Key"];
+var keyBytes = Encoding.UTF8.GetBytes(key!);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(keyBytes)
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 // MediatR v13:
 
@@ -30,6 +54,10 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(AssemblyReference).Assembly);
 });
+
+
+
+
 
 var app = builder.Build();
 

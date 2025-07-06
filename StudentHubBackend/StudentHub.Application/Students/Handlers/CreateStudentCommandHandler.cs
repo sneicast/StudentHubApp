@@ -2,11 +2,6 @@
 using StudentHub.Application.Students.Commands;
 using StudentHub.Application.Students.Interfaces;
 using StudentHub.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentHub.Application.Students.Handlers
 {
@@ -26,8 +21,7 @@ namespace StudentHub.Application.Students.Handlers
                 Name = request.Name,
                 Surnames = request.Surnames,
                 Email = request.Email,
-                //Password_hash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Password_hash = request.Password, // For simplicity, using plain text here; replace with hashing in production
+                Password_hash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 CreditProgramId = request.CreditProgramId,
             };
 

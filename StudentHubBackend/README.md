@@ -1,29 +1,51 @@
 # StudentHub.API
 
-## Descripci髇
+API desarrollada en .NET 8 para la gesti贸n de estudiantes.
 
-Este proyecto es una API desarrollada en .NET 8 para la gesti髇 de estudiantes.
+## Configuraci贸n de Base de Datos
 
-## Configuraci髇 de la cadena de conexi髇
+La cadena de conexi贸n debe configurarse mediante una **variable de entorno** por seguridad.
 
-Por seguridad, la cadena de conexi髇 a la base de datos **no debe incluirse directamente en el archivo `appsettings.json`**. En su lugar, se debe establecer mediante una variable de entorno.
+### Variable de Entorno Requerida
 
-### Estructura esperada en `appsettings.json`
-
-### Uso de variable de entorno para la cadena de conexi髇
-
-Por seguridad, la cadena de conexi髇 a la base de datos debe establecerse mediante una variable de entorno y no directamente en el archivo `appsettings.json`.
-
-#### Nombre de la variable de entorno
+```
 ConnectionStrings__DefaultConnection
-#### Ejemplo de valor
-server=localhost;port=3306;database=university_app;user=university_user;password=university_password;AllowPublicKeyRetrieval=True;SslMode=None;
-#### C髆o establecer la variable de entorno
+```
 
-- **Windows (CMD):**setx ConnectionStrings__DefaultConnection "server=localhost;port=3306;database=university_app;user=university_user;password=university_password;AllowPublicKeyRetrieval=True;SslMode=None;"
-- **Windows (PowerShell):**[System.Environment]::SetEnvironmentVariable("ConnectionStrings__DefaultConnection", "server=localhost;port=3306;database=university_app;user=university_user;password=university_password;AllowPublicKeyRetrieval=True;SslMode=None;", "User")
-- **Linux/macOS (bash):**export ConnectionStrings__DefaultConnection="server=localhost;port=3306;database=university_app;user=university_user;password=university_password;AllowPublicKeyRetrieval=True;SslMode=None;"
-#### Notas
+### Configurar la Variable de Entorno
 
-- .NET detecta autom醫icamente la variable de entorno y la utiliza en lugar del valor de `appsettings.json`.
-- No incluyas informaci髇 sensible en archivos que se suban al repositorio.
+**Windows (CMD):**
+```cmd
+setx ConnectionStrings__DefaultConnection "server=localhost;port=3306;database=university_app;user=university_user;password=university_password;AllowPublicKeyRetrieval=True;SslMode=None;"
+```
+
+**Windows (PowerShell):**
+```powershell
+[System.Environment]::SetEnvironmentVariable("ConnectionStrings__DefaultConnection", "server=localhost;port=3306;database=university_app;user=university_user;password=university_password;AllowPublicKeyRetrieval=True;SslMode=None;", "User")
+```
+
+**Linux/macOS:**
+```bash
+export ConnectionStrings__DefaultConnection="server=localhost;port=3306;database=university_app;user=university_user;password=university_password;AllowPublicKeyRetrieval=True;SslMode=None;"
+```
+
+### Configuraci贸n en appsettings.json
+
+Deja el archivo `appsettings.json` sin la cadena de conexi贸n real:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": ""
+  }
+}
+```
+
+.NET autom谩ticamente usar谩 la variable de entorno cuando est茅 disponible.
+
+## Ejecuci贸n
+
+1. Configura la variable de entorno
+2. Ejecuta `dotnet run`
+3. La API estar谩 disponible en `https://localhost:5001`
+
