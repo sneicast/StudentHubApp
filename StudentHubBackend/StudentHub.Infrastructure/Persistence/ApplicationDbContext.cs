@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentHub.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentHub.Infrastructure.Persistence
 {
@@ -21,5 +16,17 @@ namespace StudentHub.Infrastructure.Persistence
         public DbSet<Enrollment> Enrollments => Set<Enrollment>();
         public DbSet<Student> Students => Set<Student>();
         public DbSet<CreditProgram> CreditPrograms => Set<CreditProgram>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Enrollment>()
+                .HasKey(e => new { e.StudentId, e.ClassId });
+            
+            modelBuilder.Entity<Student>()
+               .HasIndex(s => s.Email)
+               .IsUnique();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

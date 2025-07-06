@@ -31,7 +31,7 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ICreditProgramRepository, CreditProgramRepository>();
 builder.Services.AddScoped<IClassesRepository, ClassesRepository>();
-
+builder.Services.AddScoped<IEnrollmentsRepository, EnrollmentsRepository>();
 // JWT Config
 var key = builder.Configuration["Jwt:Key"];
 var keyBytes = Encoding.UTF8.GetBytes(key!);

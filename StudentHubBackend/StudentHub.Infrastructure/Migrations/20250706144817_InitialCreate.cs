@@ -121,14 +121,12 @@ namespace StudentHub.Infrastructure.Migrations
                 name: "Enrollments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     ClassId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Enrollments", x => x.Id);
+                    table.PrimaryKey("PK_Enrollments", x => new { x.StudentId, x.ClassId });
                     table.ForeignKey(
                         name: "FK_Enrollments_Classes_ClassId",
                         column: x => x.ClassId,
@@ -160,14 +158,15 @@ namespace StudentHub.Infrastructure.Migrations
                 column: "ClassId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_StudentId",
-                table: "Enrollments",
-                column: "StudentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Students_CreditProgramId",
                 table: "Students",
                 column: "CreditProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_Email",
+                table: "Students",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

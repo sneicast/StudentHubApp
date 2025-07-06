@@ -68,23 +68,15 @@ namespace StudentHub.Infrastructure.Migrations
 
             modelBuilder.Entity("StudentHub.Domain.Entities.Enrollment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("StudentId", "ClassId");
 
                     b.HasIndex("ClassId");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Enrollments");
                 });
@@ -146,6 +138,9 @@ namespace StudentHub.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreditProgramId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
