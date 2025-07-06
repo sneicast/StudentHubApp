@@ -30,6 +30,7 @@ namespace StudentHub.Infrastructure.Repositories
         {
             return await _context.Students
                 .AsNoTracking()
+                .Include(s => s.CreditProgram)
                 .FirstOrDefaultAsync(s => s.Email == email, cancellationToken);
         }
     }

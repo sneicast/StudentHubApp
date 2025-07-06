@@ -34,7 +34,7 @@ namespace StudentHub.API.Controllers
             var classes = await _mediator.Send(query, cancellationToken);
             return Ok(classes);
         }
-        [HttpPost("enroll")]
+        [HttpPost("student/enroll")]
         [Authorize]
         public async Task<IActionResult> EnrollInClass([FromBody] ClassEnrollmentCommand command, CancellationToken cancellationToken)
         {
@@ -48,7 +48,7 @@ namespace StudentHub.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("enrollments")]
+        [HttpGet("student")]
         [Authorize]
         public async Task<IActionResult> GetEnrollmentsByStudentId(CancellationToken cancellationToken)
         {
