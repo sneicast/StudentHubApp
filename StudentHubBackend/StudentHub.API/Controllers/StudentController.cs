@@ -18,7 +18,7 @@ namespace StudentHub.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CreateStudentCommand command)
         {

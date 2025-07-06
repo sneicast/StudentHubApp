@@ -30,6 +30,7 @@ namespace StudentHub.Application.Students.Handlers
             return Task.FromResult(new LoginStudentResultDto
             {
                 AccessToken = _jwtTokenService.GenerateToken(student),
+                FullName = $"{student.Name} {student.Surnames}"
             });
         }
 
