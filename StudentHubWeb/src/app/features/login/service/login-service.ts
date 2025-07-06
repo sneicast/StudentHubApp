@@ -12,6 +12,9 @@ export interface LoginRequest {
 export interface LoginResponse {
   accessToken: string;
   fullName: string;
+  email: string;
+  creditProgramId: number;
+  creditProgramName: string;
 }
 
 @Injectable({
@@ -28,7 +31,10 @@ export class LoginService {
         sessionStorage.setItem(this.TOKEN_KEY, response.accessToken);
          this.sessionStorageService.setToken(response.accessToken);
           this.sessionStorageService.setStudentInfo({
-          fullName: response.fullName
+          fullName: response.fullName,
+          email: response.email,
+          creditProgramId: response.creditProgramId,
+          creditProgramName: response.creditProgramName,
         });
       })
     );

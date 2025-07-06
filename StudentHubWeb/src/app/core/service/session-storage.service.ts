@@ -17,7 +17,11 @@ private readonly TOKEN_KEY = 'accessToken';
   }
 
   getToken(): string | null {
-    return sessionStorage.getItem(this.TOKEN_KEY);
+    try {
+      return sessionStorage.getItem(this.TOKEN_KEY);
+    } catch (error) {
+      return null;
+    }
   }
 
   removeToken(): void {
@@ -44,5 +48,9 @@ private readonly TOKEN_KEY = 'accessToken';
    clearSession(): void {
     this.removeToken();
     this.removeStudentInfo();
+  }
+  
+  hasValidSession(): boolean {
+    return this.getToken() !== null;
   }
 }

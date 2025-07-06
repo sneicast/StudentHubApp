@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { StudentLayout } from './layouts/student-layout/student-layout';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -12,11 +13,16 @@ export const routes: Routes = [
     },
     {
         path: 'student',
+        canActivate: [authGuard],
         component: StudentLayout,
         children:[
             {
                 path: 'start',
                 loadComponent: () => import('./features/student-start/page/student-start-page').then(m => m.StudentStartPage)
+            },
+            {
+                path: 'classes',
+                loadComponent: () => import('./features/student-classes/page/student-classes-page').then(m => m.StudentClassesPage)
             }
         ]
     },
