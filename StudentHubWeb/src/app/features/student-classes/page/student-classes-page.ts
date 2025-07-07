@@ -4,6 +4,10 @@ import { StudentClassResponseDto } from '../dtos/student-class-response.dto';
 import { ClassDto } from '../dtos/class.dto';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { StudentDto } from '../../../core/dtos/student.dto';
+import { StudentInfo } from '../../../core/dtos/student-info';
+import { SessionStorageService } from '../../../core/service/session-storage.service';
+import { ErrorHandlerUtil } from '../../../core/utils/error-handler.util';
 
 @Component({
   selector: 'app-student-classes-page',
@@ -15,17 +19,26 @@ export class StudentClassesPage implements OnInit {
 
   ListAvailableClasses: ClassDto[] = [];
   ListStudentClasses: StudentClassResponseDto[] = [];
+  ClassStudents: StudentDto[] = [];
 
   isLoading = false;
   showEnrollModal = false;
+  showStudentsModal = false;
   isEnrolling = false;
   isLoadingAvailableClasses = false;
+  isLoadingStudents = false;
+
   selectedClassId: number | null = null;
 
-  constructor(private studentClassesService: StudentClassesService) { }
+  selectedClassName = '';
+
+   studentInfo: StudentInfo | null = null;
+
+  constructor(private studentClassesService: StudentClassesService,private sessionStoreService: SessionStorageService ) { }
 
   ngOnInit(): void {
     this.getStudentClasses();
+     this.loadStudentInfo();
   }
 
 
@@ -81,11 +94,50 @@ export class StudentClassesPage implements OnInit {
       },
       error: (error) => {
         this.isEnrolling = false;
-        alert('Error al inscribirse en la clase. Por favor intenta de nuevo.');
+        alert(ErrorHandlerUtil.handleError(error.error, 'Error al inscribirse en la clase. Por favor intenta de nuevo.'));
       }
     });
 
   }
+
+  
+  openStudentsModal(classId: number, className: string): void {
+    this.selectedClassId = classId;
+    this.selectedClassName = className;
+    this.showStudentsModal = true;
+    this.getClassStudents(classId);
+  }
+  closeStudentsModal(): void {
+    this.showStudentsModal = false;
+    this.selectedClassId = null;
+    this.selectedClassName = '';
+    this.ClassStudents = [];
+  }
+
+  getClassStudents(classId: number): void {
+    this.isLoadingStudents = true;
+    this.studentClassesService.getStudentsInClass(classId).subscribe({
+      next: (students) => {
+        this.ClassStudents = students;
+        this.isLoadingStudents = false;
+      },
+      error: (error) => {
+        this.isLoadingStudents = false;
+        alert(ErrorHandlerUtil.handleError(error.error, 'Error al cargar los estudiantes de la clase.'));
+      }
+    });
+  }
+
+  // Método helper para obtener el nombre completo
+  getFullName(student: StudentDto): string {
+    if (student.surnames) {
+      return `${student.name} ${student.surnames}`;
+    }
+    return student.name;
+  }
+
+
+
 
 
    getAvailableClasses(): void {
@@ -93,12 +145,11 @@ export class StudentClassesPage implements OnInit {
     this.studentClassesService.getAvailableClasses().subscribe({
       next: (classes) => {
         this.ListAvailableClasses = classes;
-        console.log('Available classes fetched successfully:', this.ListAvailableClasses);
         this.isLoadingAvailableClasses = false;
       },
       error: (error) => {
-        console.error('Error fetching available classes:', error);
         this.isLoadingAvailableClasses = false;
+        alert(ErrorHandlerUtil.handleError(error.error, 'Error al cargar las clases disponibles.'));
       }
     });
   }
@@ -111,21 +162,73 @@ export class StudentClassesPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error fetching student classes:', error);
         this.isLoading = false;
+        alert(ErrorHandlerUtil.handleError(error.error, 'Error al cargar las clases del estudiante.'));
       }
     });
   }
 
-  getIconPath(iconName: string): string {
-    const icons: { [key: string]: string } = {
-      'trash': 'M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16',
-      'book': 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
-      'academic-cap': 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222',
-      'plus': 'M12 6v6m0 0v6m0-6h6m-6 0H6'
-    };
 
-    return icons[iconName] || icons['book'];
+
+   loadStudentInfo(): void {
+    try {
+      const storedInfo = sessionStorage.getItem('studentInfo');
+      if (storedInfo) {
+        this.studentInfo = JSON.parse(storedInfo);
+        console.log('Student info loaded:', this.studentInfo);
+      }
+    } catch (error) {
+      console.error('Error loading student info from session:', error);
+    }
   }
+
+  // Método para calcular los créditos actuales (suma de créditos de clases inscritas)
+  getCurrentCredits(): number {
+    if (!this.ListStudentClasses || this.ListStudentClasses.length === 0) {
+      return 0;
+    }
+    return this.ListStudentClasses.reduce((total, studentClass) => {
+      return total + (studentClass.credits || 0);
+    }, 0);
+  }
+
+  // Método para calcular el porcentaje de progreso
+  getProgressPercentage(): number {
+    if (!this.studentInfo?.totalCredits || this.studentInfo.totalCredits === 0) {
+      return 0;
+    }
+    const current = this.getCurrentCredits();
+    const percentage = (current / this.studentInfo.totalCredits) * 100;
+    return Math.min(percentage, 100); // No exceder el 100%
+  }
+
+  // Método para obtener el color del progreso basado en el porcentaje
+  getProgressColor(): string {
+    const percentage = this.getProgressPercentage();
+    if (percentage < 30) return 'bg-red-500';
+    if (percentage < 70) return 'bg-yellow-500';
+    return 'bg-green-500';
+  }
+
+  // Método para obtener el color del texto basado en el porcentaje
+  getProgressTextColor(): string {
+    const percentage = this.getProgressPercentage();
+    if (percentage < 30) return 'text-red-600';
+    if (percentage < 70) return 'text-yellow-600';
+    return 'text-green-600';
+  }
+
+  // Método para obtener mensaje motivacional
+  getProgressMessage(): string {
+    const percentage = this.getProgressPercentage();
+    if (percentage === 0) return '¡Comienza tu journey académico!';
+    if (percentage < 25) return '¡Buen comienzo! Sigue adelante';
+    if (percentage < 50) return '¡Vas por buen camino!';
+    if (percentage < 75) return '¡Excelente progreso!';
+    if (percentage < 100) return '¡Casi terminas!';
+    return '¡Felicidades! Has completado todos los créditos';
+  }
+
+
 
 }

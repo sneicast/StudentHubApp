@@ -6,6 +6,7 @@ import { RegisterService } from '../service/register-service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ErrorHandlerUtil } from '../../../core/utils/error-handler.util';
 
 @Component({
   selector: 'app-register-page',
@@ -27,11 +28,11 @@ export class RegisterPage implements OnInit {
 
   errorMessage: string = '';
   confirmPassword: string = '';
-  
-   showSuccessModal: boolean = false;
-  
 
-  constructor(private creditProgramService: CreditProgramService, private registerService: RegisterService, private router: Router) {}
+  showSuccessModal: boolean = false;
+
+
+  constructor(private creditProgramService: CreditProgramService, private registerService: RegisterService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadCreditPrograms();
@@ -45,8 +46,7 @@ export class RegisterPage implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading credit programs:', error);
-        this.errorMessage = 'Error loading credit programs';
+        this.errorMessage = ErrorHandlerUtil.handleError(error.error, 'Error cargando programas académicos');
         this.isLoading = false;
       }
     });
@@ -60,15 +60,13 @@ export class RegisterPage implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Aquí harías la llamada al servicio de registro
-    console.log('Datos de registro:', this.registerData);
     this.registerService.register(this.registerData).subscribe({
       next: (response) => {
         this.isLoading = false;
-         this.showSuccessModal = true;
+        this.showSuccessModal = true;
       },
       error: (error) => {
-        this.errorMessage = 'Error al registrar. Por favor, intenta de nuevo.';
+        this.errorMessage = ErrorHandlerUtil.handleError(error.error, 'Error registrando usuario');
         this.isLoading = false;
       }
     });
@@ -81,7 +79,6 @@ export class RegisterPage implements OnInit {
     this.registerData.creditProgramId = parseInt(event.target.value);
   }
   private validateForm(): boolean {
-    // Validar campos requeridos
     if (!this.registerData.name.trim()) {
       this.errorMessage = 'El nombre es requerido';
       return false;

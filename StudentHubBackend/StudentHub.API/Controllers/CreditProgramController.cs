@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StudentHub.Application.CreditPrograms.Queries;
 
 namespace StudentHub.API.Controllers
 {
@@ -16,7 +17,7 @@ namespace StudentHub.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var creditPrograms = await _mediator.Send(new StudentHub.Application.CreditPrograms.Queries.GetAllCreditProgramsQuery());
+            var creditPrograms = await _mediator.Send(new GetAllCreditProgramsQuery());
             return Ok(creditPrograms);
 
         }

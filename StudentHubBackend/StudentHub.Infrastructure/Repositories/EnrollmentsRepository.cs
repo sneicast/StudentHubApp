@@ -43,5 +43,11 @@ namespace StudentHub.Infrastructure.Repositories
                 .Where(e => e.StudentId == studentId)
                 .ToListAsync(cancellationToken);
         }
+
+        public Task RemoveEnrollmentAsync(int studentId, int classId, CancellationToken cancellationToken)
+        {
+            _context.Enrollments.Remove(new Enrollment { StudentId = studentId, ClassId = classId });
+            return _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

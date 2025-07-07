@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../service/login-service';
+import { ErrorHandlerUtil } from '../../../core/utils/error-handler.util';
 
 @Component({
   selector: 'app-login-page',
@@ -37,12 +38,12 @@ export class LoginPage {
     this.loginService.login(credentials).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.router.navigate(['/student/start']);
+        this.router.navigate(['/student/classes']);
       },
       error: (error) => {
-        console.error('Error en login:', error);
+       
         this.isLoading = false;
-        this.errorMessage = 'Credenciales incorrectas. Por favor, intenta de nuevo.';
+        this.errorMessage = ErrorHandlerUtil.handleError(error.error, 'Credenciales incorrectas. Por favor, intenta de nuevo.');
       }
     });
   }

@@ -8,5 +8,7 @@ namespace StudentHub.Application.Classes.Interfaces
         Task<Enrollment?> GetEnrollmentAsync(int studentId, int classId, CancellationToken cancellationToken);
 
         Task<List<Enrollment>> GetEnrollmentsByStudentIdAsync(int studentId, CancellationToken cancellationToken);
+
+        Task RemoveEnrollmentAsync(int studentId, int classId, CancellationToken cancellationToken);
     }
 }

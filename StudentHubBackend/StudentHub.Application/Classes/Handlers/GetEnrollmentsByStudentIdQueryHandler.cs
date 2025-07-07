@@ -13,10 +13,10 @@ namespace StudentHub.Application.Classes.Handlers
             _enrollmentsRepository = enrollmentsRepository;
         }
 
-        public Task<List<ClassEnrollmentResponseDto>> Handle(GetEnrollmentsByStudentIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<ClassEnrollmentResponseDto>> Handle(GetEnrollmentsByStudentIdQuery request, CancellationToken cancellationToken)
         {
             
-           return _enrollmentsRepository.GetEnrollmentsByStudentIdAsync(request.StudentId, cancellationToken)
+           return await _enrollmentsRepository.GetEnrollmentsByStudentIdAsync(request.StudentId, cancellationToken)
                 .ContinueWith(task =>
                 {
                     var enrollments = task.Result;

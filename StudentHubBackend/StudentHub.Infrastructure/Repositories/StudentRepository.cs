@@ -33,5 +33,16 @@ namespace StudentHub.Infrastructure.Repositories
                 .Include(s => s.CreditProgram)
                 .FirstOrDefaultAsync(s => s.Email == email, cancellationToken);
         }
+
+        public Task<Student?> GetStudentByIdAsync(int studentId, CancellationToken cancellationToken)
+        {
+            return _context.Students
+                .AsNoTracking()
+                .Include(s => s.CreditProgram)
+                .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Class)
+                        .ThenInclude(c => c.Subject)
+                .FirstOrDefaultAsync(s => s.Id == studentId, cancellationToken);
+        }
     }
 }

@@ -17,14 +17,10 @@ export const routes: Routes = [
         component: StudentLayout,
         children:[
             {
-                path: 'start',
-                loadComponent: () => import('./features/student-start/page/student-start-page').then(m => m.StudentStartPage)
-            },
-            {
                 path: 'classes',
                 loadComponent: () => import('./features/student-classes/page/student-classes-page').then(m => m.StudentClassesPage)
             }
         ]
     },
-   { path: '**', redirectTo: 'student/start' }
+   { path: '**', redirectTo: 'student/classes' }
 ];

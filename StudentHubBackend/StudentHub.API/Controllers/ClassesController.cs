@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentHub.Application.Classes.Commands;
+using StudentHub.Application.Classes.Queries;
 
 namespace StudentHub.API.Controllers
 {
@@ -19,31 +20,20 @@ namespace StudentHub.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetAvailableClasses(CancellationToken cancellationToken)
         {
-            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-            if (!int.TryParse(userIdString, out var userId))
+            var query = new GetAvailableClassesQuery
             {
-                return BadRequest("Invalid user ID.");
-            }
-
-            var query = new StudentHub.Application.Classes.Queries.GetAvailableClassesQuery
-            {
-                StudentId = userId
+                StudentId = GetUserId()
             };
 
             var classes = await _mediator.Send(query, cancellationToken);
             return Ok(classes);
         }
+
         [HttpPost("student/enroll")]
         [Authorize]
         public async Task<IActionResult> EnrollInClass([FromBody] ClassEnrollmentCommand command, CancellationToken cancellationToken)
         {
-            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (!int.TryParse(userIdString, out var userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
-            command.StudentId = userId;
+            command.StudentId = GetUserId();
             var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }
@@ -52,17 +42,52 @@ namespace StudentHub.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetEnrollmentsByStudentId(CancellationToken cancellationToken)
         {
-            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (!int.TryParse(userIdString, out var userId))
+
+            var query = new GetEnrollmentsByStudentIdQuery
             {
-                return BadRequest("Invalid user ID.");
-            }
-            var query = new StudentHub.Application.Classes.Queries.GetEnrollmentsByStudentIdQuery
-            {
-                StudentId = userId
+                StudentId = GetUserId()
             };
             var enrollments = await _mediator.Send(query, cancellationToken);
             return Ok(enrollments);
+        }
+        //unenroll student from class
+
+        [HttpDelete("{classId}/unenroll")]
+        [Authorize]
+        public async Task<IActionResult> RemoveStudentClass(int classId, CancellationToken cancellationToken)
+        {
+            var command = new RemoveStudentClassCommand
+            {
+                StudentId = GetUserId(),
+                ClassId = classId
+            };
+            await _mediator.Send(command, cancellationToken);
+            return NoContent();
+        }
+
+        //Obtener lista de estudiantes inscritos en una clase
+        [HttpGet("{classId}/students")]
+        [Authorize]
+        public async Task<IActionResult> GetStudentsInClass(int classId, CancellationToken cancellationToken)
+        {
+            var query = new GetStudentsInClassQuery
+            {
+                ClassId = classId,
+                StudentId = GetUserId()
+            };
+            var students = await _mediator.Send(query, cancellationToken);
+            return Ok(students);
+        }
+
+
+        private int GetUserId() { 
+            
+            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdString, out var userId))
+            {
+                throw new InvalidOperationException("El userId es invalido");
+            }
+            return userId;
         }
     }
 }

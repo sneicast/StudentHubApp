@@ -3,5 +3,6 @@ export interface StudentInfo {
   email?: string;
   creditProgramId?: number;
   creditProgramName?: string;
+  totalCredits?: number;
   studentId?: number;
 }

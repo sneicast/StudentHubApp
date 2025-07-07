@@ -16,12 +16,6 @@ export class StudentLayout implements OnInit {
   isMobile = false;
   menuItems = [
     {
-      name: 'Inicio',
-      icon: 'home',
-      route: '/student/start',
-      active: true
-    },
-    {
       name: 'Mis Clases',
       icon: 'academic-cap',
       route: '/student/classes',
@@ -40,7 +34,6 @@ export class StudentLayout implements OnInit {
     this.studentInfo = this.sessionStorageService.getStudentInfo();
 
     if (!this.studentInfo) {
-      // Si no hay información del estudiante, redirigir al login
       this.router.navigate(['/login']);
     }
   }
@@ -51,9 +44,8 @@ export class StudentLayout implements OnInit {
   }
 
   private checkScreenSize(): void {
-    this.isMobile = window.innerWidth < 1024; // lg breakpoint
+    this.isMobile = window.innerWidth < 1024;
     
-    // Cerrar sidebar automáticamente si cambió a pantalla grande
     if (!this.isMobile) {
       this.isSidebarOpen = false;
     }

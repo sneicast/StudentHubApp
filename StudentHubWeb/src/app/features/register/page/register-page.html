@@ -1,30 +1,18 @@
 @if (showSuccessModal) {
 <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-  <!-- Overlay del modal -->
   <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-
-    <!-- Contenido del modal -->
-    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
     <div
       class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
       <div>
-        <!-- Ícono de éxito -->
-        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-          <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
 
-        <!-- Título -->
         <div class="mt-3 text-center sm:mt-5">
           <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
             ¡Registro Exitoso!
           </h3>
 
-          <!-- Mensaje -->
+
           <div class="mt-2">
             <p class="text-sm text-gray-500">
               Tu cuenta ha sido creada exitosamente. Te invitamos a iniciar sesión con tus credenciales.
@@ -33,7 +21,6 @@
         </div>
       </div>
 
-      <!-- Botones -->
       <div class="mt-5 sm:mt-6 flex justify-center">
         <button type="button" (click)="closeModalAndRedirect()"
           class="w-full max-w-xs inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm transition duration-150 ease-in-out">
@@ -60,7 +47,6 @@
     </div>
 
     <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()" #registerForm="ngForm">
-      <!-- Mensaje de error -->
       @if (errorMessage) {
       <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-4">
         <span class="block sm:inline">{{ errorMessage }}</span>
@@ -68,7 +54,6 @@
       }
 
       <div class="space-y-4">
-        <!-- Nombre -->
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">
             Nombre
@@ -79,7 +64,6 @@
             placeholder="Ingresa tu nombre" />
         </div>
 
-        <!-- Apellidos -->
         <div>
           <label for="surnames" class="block text-sm font-medium text-gray-700">
             Apellidos
@@ -90,7 +74,6 @@
             placeholder="Ingresa tus apellidos" />
         </div>
 
-        <!-- Email -->
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">
             Correo Electrónico
@@ -101,7 +84,6 @@
             placeholder="correo@ejemplo.com" />
         </div>
 
-        <!-- Programa Académico -->
         <div>
           <label for="creditProgram" class="block text-sm font-medium text-gray-700">
             Programa Académico
@@ -116,7 +98,6 @@
           </select>
         </div>
 
-        <!-- Contraseña -->
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">
             Contraseña
@@ -127,7 +108,6 @@
             placeholder="Mínimo 8 caracteres" />
         </div>
 
-        <!-- Confirmar Contraseña -->
         <div>
           <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
             Confirmar Contraseña
@@ -139,33 +119,21 @@
         </div>
       </div>
 
-      <!-- Botón de registro -->
       <div>
         <button type="submit" [disabled]="isLoading || !registerForm.form.valid"
           class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:bg-gray-400 disabled:cursor-not-allowed">
           <span class="absolute left-0 inset-y-0 flex items-center pl-3">
             @if (isLoading) {
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-              viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-              </path>
-            </svg>
+                <div class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
             }
             @if (!isLoading) {
-            <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20" fill="currentColor">
-              <path
-                d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8 11a6 6 0 0 1 6 6H2a6 6 0 0 1 6-6zM16 7a1 1 0 1 0-2 0v1h-1a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0v-1h1a1 1 0 1 0 0-2h-1V7z" />
-            </svg>
+                <span class="text-indigo-300 group-hover:text-indigo-200 text-lg"></span>
             }
           </span>
           {{ isLoading ? 'Registrando...' : 'Crear Cuenta' }}
         </button>
       </div>
 
-      <!-- Link para login -->
       <div class="text-center">
         <p class="text-sm text-gray-600">
           ¿Ya tienes una cuenta?

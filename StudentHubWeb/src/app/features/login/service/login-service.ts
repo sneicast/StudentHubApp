@@ -15,6 +15,7 @@ export interface LoginResponse {
   email: string;
   creditProgramId: number;
   creditProgramName: string;
+  totalCredits: number;
 }
 
 @Injectable({
@@ -35,6 +36,7 @@ export class LoginService {
           email: response.email,
           creditProgramId: response.creditProgramId,
           creditProgramName: response.creditProgramName,
+          totalCredits: response.totalCredits,
         });
       })
     );

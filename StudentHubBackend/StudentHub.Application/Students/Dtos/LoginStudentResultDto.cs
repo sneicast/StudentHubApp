@@ -9,6 +9,7 @@ namespace StudentHub.Application.Students.Dtos
         public string Email { get; set; } = default!;
         public int CreditProgramId { get; set; }
         public string CreditProgramName { get; set; } = default!;
+        public int TotalCredits { get; set; } = default!;
 
     }
 }

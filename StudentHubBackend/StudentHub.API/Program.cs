@@ -1,14 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using StudentHub.Application;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using StudentHub.API.Middleware;
+using StudentHub.Application;
+using StudentHub.Application.Classes.Interfaces;
+using StudentHub.Application.CreditPrograms.Interfaces;
 using StudentHub.Application.Students.Interfaces;
 using StudentHub.Infrastructure.Persistence;
 using StudentHub.Infrastructure.Repositories;
 using StudentHub.Infrastructure.Services;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using StudentHub.Application.CreditPrograms.Interfaces;
-using StudentHub.Application.Classes.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +82,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseCors("AllowAll");
 app.UseAuthorization();
 

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema; // Necesario para [Index]
 
 namespace StudentHub.Domain.Entities
 {

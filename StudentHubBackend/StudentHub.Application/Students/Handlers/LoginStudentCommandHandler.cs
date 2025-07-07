@@ -18,24 +18,25 @@ namespace StudentHub.Application.Students.Handlers
 
         }
 
-        public Task<LoginStudentResultDto> Handle(LoginStudentCommand request, CancellationToken cancellationToken)
+        public async Task<LoginStudentResultDto> Handle(LoginStudentCommand request, CancellationToken cancellationToken)
         {
             
-            var student = _studentRepository.GetStudentByEmailAsync(request.Email, cancellationToken)
-                .GetAwaiter().GetResult();
+            var student = await _studentRepository.GetStudentByEmailAsync(request.Email, cancellationToken);
             if (student == null || !BCrypt.Net.BCrypt.Verify(request.Password, student.Password_hash))
             {
-                throw new UnauthorizedAccessException("Invalid email or password.");
+                throw new UnauthorizedAccessException("Correo o contraseña Invalidos");
             }
-            return Task.FromResult(new LoginStudentResultDto
+            return new LoginStudentResultDto
             {
                 AccessToken = _jwtTokenService.GenerateToken(student),
                 FullName = $"{student.Name} {student.Surnames}",
                 Email = student.Email,
                 CreditProgramId = student.CreditProgramId ?? 0,
-                CreditProgramName = student.CreditProgram?.Name ?? "No Program Assigned"
+                CreditProgramName = student.CreditProgram?.Name ?? "",
+                TotalCredits = student.CreditProgram?.TotalCredits ?? 0
 
-            });
+
+            };
         }
 
     }

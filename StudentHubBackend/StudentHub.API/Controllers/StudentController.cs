@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentHub.Application.Students.Commands;
 using StudentHub.Application.Students.Queries;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace StudentHub.API.Controllers
 {

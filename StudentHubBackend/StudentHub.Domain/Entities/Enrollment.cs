@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace StudentHub.Domain.Entities
 {
     public class Enrollment

@@ -4,6 +4,7 @@ import { StudentClassRequestDto } from '../dtos/student-class-request.dto';
 import { Observable } from 'rxjs';
 import { ClassDto } from '../dtos/class.dto';
 import { StudentClassResponseDto } from '../dtos/student-class-response.dto';
+import { StudentDto } from '../../../core/dtos/student.dto';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -26,10 +27,10 @@ export class StudentClassesService {
   }
 
    removeStudentFromClass(classId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/student/classes/${classId}`);
+    return this.http.delete(`${this.apiUrl}/api/Classes/${classId}/unenroll`);
   }
 
-  getClassStudents(classId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/classes/${classId}/students`);
+  getStudentsInClass(classId: number): Observable<StudentDto[]> {
+    return this.http.get<StudentDto[]>(`${this.apiUrl}/api/Classes/${classId}/students`);
   }
 }
