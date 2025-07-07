@@ -64,11 +64,9 @@ namespace StudentHub.Application.Classes.Handlers
                 ProfessorName = existingEnrollment.Class?.Professor?.Name ?? ""
             };
 
-
         }
 
-        //Validar si el estudiante ya tiene clase con el profesor que dicta la clase. el estudiante solo puede tener una clase por profesor, pero el profesor puede tener muchas class
-        private bool IsStudentAlreadyEnrolledInClassWithProfessor(Student student, Class detailtClass)
+         private bool IsStudentAlreadyEnrolledInClassWithProfessor(Student student, Class detailtClass)
         {
             int professorId = detailtClass.Professor?.Id ?? 0;
             return student.Enrollments.Any(e => e.Class?.ProfessorId == professorId);
